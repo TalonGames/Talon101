@@ -73,7 +73,7 @@
             <a href="${rootPrefix}pages/disclaimer.html" class="footer-link">Disclaimer</a>
             <a href="${rootPrefix}pages/extra.html" class="footer-link">Credits</a>
         </div>
-        <span class="footer-version" id="footer-version">&copy; 2026 ${config.name || 'Phantom Unblocked'}. All rights reserved. | v${config.version || '1.0.0'}</span>
+        <span class="footer-version" id="footer-version">&copy; 2026 ${config.name || 'Talon Unblocked'}. All rights reserved. | v${config.version || '1.0.0'}</span>
         <span class="footer-online-counter" style="margin-left: 12px; font-size: 0.75rem; color: var(--text-dim, #52525b);">
             <span id="footer-online-count">--</span> online
             <span id="footer-refresh-countdown" style="margin-left: 4px; opacity: 0.6;"></span>
