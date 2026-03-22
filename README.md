@@ -28,7 +28,7 @@ config.js – The "control center" where all the main settings live.
 
 ## ⚠️ Known Issues
 Performance & Lag
-Since this is a solo project and proxying heavy web traffic is resource-intensive, you might experience some lag or slow load times on media-heavy sites. This is usually due to the rewriting engine processing large scripts or high-resolution assets in real-time. I'm looking into ways to optimize this.
+Since this is a solo project and proxying heavy web traffic is resource-intensive, you might experience some lag or slow load times on media-heavy sites. This is usually due to the rewriting engine processing large scripts or high-resolution assets in real-time. I'm looking into ways to optimize this. Also singlefile doesn't work so just use the whole repo like said here is a link I made https://talon101.vercel.app/.
 
 ## 🛡️ Disclaimer
 Important: Please do not use this tool in a school or workplace environment unless you have explicit permission to do so. This was built for freedom of information, but please use it responsibly.
