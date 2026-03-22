@@ -63,9 +63,9 @@ window.SITE_CONFIG = {
     ],
 
     discord: {
-        inviteUrl: "https://discord.gg/ctg7HwGDNe",
-        widgetServer: "1447673724017971324",
-        widgetChannel: "1447673726228496617",
+        inviteUrl: "https://discord.gg/VMYGhAEqcD",
+        widgetServer: "",
+        widgetChannel: "",
     },
 
     firstVisitCloak: false, // fake offline page
