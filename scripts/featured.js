@@ -17,44 +17,63 @@ const FeaturedGames = {
     async load() {
         try {
             let allGames = [];
-            if (window.Gloader) {
+            
+            // 1. Improved Gloader/Fetch logic with proper error boundaries
+            if (window.Gloader && typeof window.Gloader.load === 'function') {
                 allGames = await window.Gloader.load('multi');
             } else {
-                console.warn("Gloader not found in featured.js");
-                // Fallback to old loading logic if gloader fails
-                const data = await (await fetch("https://cdn.jsdelivr.net/gh/gn-math/assets@latest/zones.json")).json();
-                allGames = data.map(g => ({
-                    name: (g.name || g.title).replace(/\.html$|-a\.html$/i, '').replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/\b\w/g, l => l.toUpperCase()).trim(),
-                    url: (g.url || g.file)?.replace('{HTML_URL}', "https://cdn.jsdelivr.net/gh/gn-math/html@main").replace('-a.html', '.html'),
-                    img: `https://cdn.jsdelivr.net/gh/gn-math/assets@latest/images/${((g.name || g.title).replace(/\.html$|-a\.html$/i, '')).toLowerCase().replace(/\s+/g, '-')}.png`
-                }));
+                const response = await fetch("https://cdn.jsdelivr.net/gh/gn-math/assets@latest/zones.json");
+                if (!response.ok) throw new Error("Failed to fetch zones.json");
+                
+                const data = await response.json();
+                allGames = data.map(g => {
+                    const rawName = g.name || g.title || "";
+                    return {
+                        name: rawName.replace(/\.html$|-a\.html$/i, '').replace(/[-_]/g, ' ').replace(/([a-z])([A-Z])/g, '$1 $2').trim(),
+                        url: (g.url || g.file || "").replace('{HTML_URL}', "https://cdn.jsdelivr.net/gh/gn-math/html@main").replace('-a.html', '.html'),
+                        img: `https://cdn.jsdelivr.net/gh/gn-math/assets@latest/images/${rawName.replace(/\.html$|-a\.html$/i, '').toLowerCase().replace(/\s+/g, '-')}.png`
+                    };
+                });
             }
 
-            const preloads = this.games.map(async g => {
+            // 2. Optimized matching and preloading
+            const preloads = this.games.map(async (g) => {
                 if (!g.gameName) return;
 
-                const searchName = g.gameName.toLowerCase().replace(/[^a-z0-9]/g, '');
-                const targetGame = allGames.find(game =>
-                    (game.normalized && game.normalized === searchName) ||
-                    game.name.toLowerCase().replace(/[^a-z0-9]/g, '') === searchName
-                );
+                const searchKey = g.gameName.toLowerCase().replace(/[^a-z0-9]/g, '');
+                
+                // Find game by normalized name or exact name
+                const targetGame = allGames.find(game => {
+                    const gameNameRaw = (game.name || "").toLowerCase().replace(/[^a-z0-9]/g, '');
+                    return (game.normalized === searchKey) || (gameNameRaw === searchKey) || (gameNameRaw.includes(searchKey));
+                });
 
                 if (targetGame && targetGame.url) {
                     g.url = `pages/player.html?type=game&title=${encodeURIComponent(g.name)}&url=${encodeURIComponent(targetGame.url)}`;
-                    g.img = g.img || targetGame.img || `https://cdn.jsdelivr.net/gh/gn-math/assets@latest/images/${g.gameName.toLowerCase().replace(/\s+/g, '-')}.png`;
-
-                    // Trigger preload without blocking the map
-                    const img = new Image();
-                    img.src = g.img;
+                    g.img = g.img || targetGame.img;
+                    
+                    // Preload Image safely
+                    if (g.img) {
+                        const img = new Image();
+                        img.src = g.img;
+                    }
                 } else {
+                    // Fallback URL if game is not found in the list
+                    g.url = `pages/games.html?gamename=${encodeURIComponent(g.gameName)}`;
+                    if (!g.icon) g.icon = 'fa-solid fa-gamepad';
+                }
+            });
+
+            await Promise.all(preloads);
+        } catch (err) {
+            console.error("FeaturedGames Load Error:", err);
+            // Emergency fallback for all items with a gameName
+            this.games.forEach(g => {
+                if (g.gameName && !g.url) {
                     g.url = `pages/games.html?gamename=${encodeURIComponent(g.gameName)}`;
                     g.icon = 'fa-solid fa-gamepad';
                 }
             });
-            await Promise.all(preloads);
-        } catch (e) {
-            console.error(e);
-            this.games.forEach(g => g.gameName && (g.url = `pages/games.html?gamename=${encodeURIComponent(g.gameName)}`, g.icon = 'fa-solid fa-gamepad'));
         }
     }
 };
