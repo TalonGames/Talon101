@@ -27,11 +27,11 @@ window.SITE_CONFIG = {
         "press ctrl+x to hide your screen",
         "change the tab title and favicon in settings",
         "TEACHERR!",
-        "1 pump",
+        "HE IS ONE SHOTTT",
         "since when does ctrl-shift-q-q give free money",
         "bros prolly a 60 ovr",
         "High-Point ALL THE WAY (joking)",
-        "lebron is OUR goat",
+        "whats 9+10",
         "stop looking at my screen",
     ],
 
