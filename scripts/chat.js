@@ -42,7 +42,7 @@ class PhantomChat {
         this.startPlaceholderAnimation();
 
         if (window.Notify) {
-            Notify.success('Ready', 'Phantom AI is loaded');
+            Notify.success('Ready', 'Talon AI is loaded');
         }
     }
 
