@@ -56,3 +56,4 @@ I’m always updating it (as you can see from the recent featured.js and footer.
 
 ## 📄 License
 Keeping it open: MIT License. Check the LICENSE file if you're curious about the legal bits.
+Modified from Phantom here is a link back to the official repo is https://github.com/Destroyed12121/Phantom101.
