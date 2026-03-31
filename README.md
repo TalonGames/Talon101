@@ -55,5 +55,5 @@ This project is entirely a solo effort by me (Keystone). From the initial index.
 I’m always updating it (as you can see from the recent featured.js and footer.js commits), so stay tuned for more.
 
 ## 📄 License
-Keeping it open: MIT License. Check the LICENSE file if you're curious about the legal bits.
+Keeping it open: PolyForm Noncommercial License 1.0.0 License. Check the LICENSE file if you're curious about the legal bits.
 Modified from Phantom here is a link back to the official repo is https://github.com/Destroyed12121/Phantom101.
