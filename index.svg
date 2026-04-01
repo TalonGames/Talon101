@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <foreignObject width="100%" height="100%">
+    <div xmlns="http://www.w3.org/1999/xhtml" style="width: 100%; height: 100%;">
+      
+      <style>
+        /* Embedding styles directly since external local CSS might fail in SVG */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0a0a; font-family: 'Inter', sans-serif; }
+        .loading-screen { position: fixed; inset: 0; background: rgba(10, 10, 10, 0.6); backdrop-filter: blur(15px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; }
+        .loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.5s ease-in-out; }
+        .loading-logo { font-size: 2.5rem; font-weight: 700; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; color: #e4e4e7; }
+        .loading-spinner { width: 40px; height: 40px; border: 3px solid #1f1f1f; border-top-color: #71717a; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        iframe { width: 100%; height: 100%; border: none; }
+        
+        /* Mimicking your error page styles for the cloak */
+        .neterror { background: #fff; color: #000; height: 100%; display: none; padding: 10%; }
+      </style>
+
+      <div id="fv-cloak" class="neterror">
+        <h1>This site can’t be reached</h1>
+        <p><strong id="origin-text"></strong>’s DNS address could not be found.</p>
+        <button id="reload-button">Reload</button>
+      </div>
+
+      <div id="loading-screen" class="loading-screen">
+        <div class="loading-logo"><span>Talon</span></div>
+        <div class="loading-spinner"></div>
+      </div>
+
+      <iframe id="main-frame"></iframe>
+
+      <script>
+        <![CDATA[
+        (function() {
+            const STORAGE_KEY = 'phantom_fv';
+            const hasBypassed = localStorage.getItem(STORAGE_KEY);
+            const origin = window.location.hostname || "This site";
+            document.getElementById("origin-text").textContent = origin;
+
+            async function launchApp() {
+                document.getElementById('fv-cloak').style.display = 'none';
+                const iframe = document.getElementById('main-frame');
+                
+                // Using jsDelivr for the secondary page to ensure it's not blocked
+                const target = "https://cdn.jsdelivr.net/gh/TalonGames/Talon101@main/index2.html";
+                
+                try {
+                    const response = await fetch(target);
+                    let pageHTML = await response.text();
+                    
+                    // Injecting base href so relative assets in index2.html still load from the CDN
+                    const currentBase = "https://cdn.jsdelivr.net/gh/TalonGames/Talon101@main/";
+                    pageHTML = pageHTML.replace(/<head>/i, `<head><base href="${currentBase}">`);
+                    
+                    const idoc = iframe.contentWindow.document;
+                    idoc.open();
+                    idoc.write(pageHTML);
+                    idoc.close();
+                } catch (e) {
+                    iframe.src = target;
+                }
+                
+                setTimeout(() => {
+                    document.getElementById('loading-screen').classList.add('hidden');
+                }, 500);
+            }
+
+            // Key listener for the 'C' bypass
+            document.addEventListener('keydown', (e) => {
+                if (e.key.toLowerCase() === 'c') {
+                    localStorage.setItem(STORAGE_KEY, 'true');
+                    launchApp();
+                }
+            });
+
+            if (!hasBypassed) {
+                document.getElementById('fv-cloak').style.display = 'block';
+            } else {
+                launchApp();
+            }
+        })();
+        ]]>
+      </script>
+    </div>
+  </foreignObject>
+</svg>
